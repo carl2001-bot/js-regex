@@ -13,7 +13,23 @@ function validateForm() {
     'Password must be at least 8 characters, include one uppercase, one lowercase, and one number.');
 
   if (fullName && email && phone && password) {
-    document.getElementById('successMessage').style.display = 'block';
+    document.getElementById('successMessage').style.display = 'block'
+    
+    // Enable real-time validation
+document.getElementById("fullName").addEventListener("input", () => 
+    validateField(document.getElementById("fullName"), namePattern, "Only alphabetic characters allowed.")
+);
+document.getElementById("email").addEventListener("input", () => 
+    validateField(document.getElementById("email"), emailPattern, "Enter a valid email address.")
+);
+document.getElementById("phone").addEventListener("input", () => 
+    validateField(document.getElementById("phone"), phonePattern, "Enter a valid phone number (10-15 digits).")
+);
+document.getElementById("password").addEventListener("input", () => 
+    validateField(document.getElementById("password"), passwordPattern, "Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, and one number.")
+);
+
+    
   }
 }
 
