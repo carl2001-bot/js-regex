@@ -1,35 +1,53 @@
-const form = document.getElementById('validationForm');
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("userForm");
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  validateForm();
+    // Regular Expressions for Validation
+    const namePattern = /^[A-Za-z\s]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phonePattern = /^\d{10,15}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    // Validation Function
+    function validateField(input, pattern, errorMessage) {
+        const errorSpan = document.getElementById(input.id + "Error");
+        if (!pattern.test(input.value)) {
+            errorSpan.textContent = errorMessage; // Show error message
+            input.style.border = "2px solid red"; // Highlight red
+            return false;
+        } else {
+            errorSpan.textContent = ""; // Remove error message
+            input.style.border = "2px solid green"; // Highlight green
+            return true;
+        }
+    }
+
+    // Enable Real-Time Validation (Check as the user types)
+    document.getElementById("fullName").addEventListener("input", () => 
+        validateField(document.getElementById("fullName"), namePattern, "Only alphabetic characters allowed.")
+    );
+    document.getElementById("email").addEventListener("input", () => 
+        validateField(document.getElementById("email"), emailPattern, "Enter a valid email address.")
+    );
+    document.getElementById("phone").addEventListener("input", () => 
+        validateField(document.getElementById("phone"), phonePattern, "Enter a valid phone number (10-15 digits).")
+    );
+    document.getElementById("password").addEventListener("input", () => 
+        validateField(document.getElementById("password"), passwordPattern, "Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, and one number.")
+    );
+
+    // Prevent Form Submission if Errors Exist
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const isNameValid = validateField(document.getElementById("fullName"), namePattern, "Only alphabetic characters allowed.");
+        const isEmailValid = validateField(document.getElementById("email"), emailPattern, "Enter a valid email address.");
+        const isPhoneValid = validateField(document.getElementById("phone"), phonePattern, "Enter a valid phone number (10-15 digits).");
+        const isPasswordValid = validateField(document.getElementById("password"), passwordPattern, "Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, and one number.");
+
+        if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid) {
+            document.getElementById("successMessage").style.display = "block"; // Show success message
+        }
+    });
 });
 
-function validateForm() {
-  const fullName = validateField('fullName', /^[a-zA-Z\s]+$/, 'Full name must only contain letters and spaces.');
-  const email = validateField('email', /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please enter a valid email address.');
-  const phone = validateField('phone', /^\d{10,15}$/, 'Phone number must be 10-15 digits.');
-  const password = validateField('password', /^(?=.[a-z])(?=.[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, 
-    'Password must be at least 8 characters, include one uppercase, one lowercase, and one number.');
-
-  if (fullName && email && phone && password) {
-    document.getElementById('successMessage').style.display = 'block'
-    
-
-    
-  }
-}
-
-function validateField(id, regex, errorMsg) {
-  const input = document.getElementById(id);
-  const small = input.nextElementSibling;
-  if (!regex.test(input.value.trim())) {
-    input.classList.add('invalid');
-    small.innerText=";
-      return true;
-  }
-}
-    small.innerText = errorMsg;
-    return false;
-  } else {
-    input.classList.remove('invalid');
+ 
